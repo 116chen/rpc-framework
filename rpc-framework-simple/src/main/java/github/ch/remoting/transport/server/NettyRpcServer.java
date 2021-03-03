@@ -1,6 +1,7 @@
 package github.ch.remoting.transport.server;
 
 import com.sun.media.jfxmedia.logging.Logger;
+import github.ch.config.CustomShutdownHook;
 import github.ch.factory.SingletonFactory;
 import github.ch.provider.ServiceProvider;
 import github.ch.provider.ServiceProviderImpl;
@@ -38,7 +39,6 @@ import java.util.concurrent.TimeUnit;
  * @Time: 2021/2/25 下午3:06
  */
 @Slf4j
-@Component
 public class NettyRpcServer {
     public static final int port = 8000;
 
@@ -51,7 +51,7 @@ public class NettyRpcServer {
     @SneakyThrows
     public void start() {
         //自动关闭所有服务
-
+        CustomShutdownHook.getCustomShutdownHook().clearAll();
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();

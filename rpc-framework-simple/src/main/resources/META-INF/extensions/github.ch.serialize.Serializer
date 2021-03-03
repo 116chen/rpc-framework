@@ -1,0 +1,2 @@
+protostuff=github.ch.serialize.protostuff.ProtostuffSerializer
+kryo=github.ch.serialize.kryo.KryoSerializer

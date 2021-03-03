@@ -2,6 +2,7 @@ package github.ch.remoting.transport.client;
 
 import github.ch.enums.CompressTypeEnum;
 import github.ch.enums.SerializationTypeEnum;
+import github.ch.extension.ExtensionLoader;
 import github.ch.factory.SingletonFactory;
 import github.ch.register.ServiceDiscovery;
 import github.ch.register.zk.ZkServiceDiscovery;
@@ -62,7 +63,7 @@ public final class NettyRpcClient implements RpcRequestTransport {
                 });
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        serviceDiscovery = SingletonFactory.getInstance(ZkServiceDiscovery.class);
+        serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
     }
 
     @SneakyThrows

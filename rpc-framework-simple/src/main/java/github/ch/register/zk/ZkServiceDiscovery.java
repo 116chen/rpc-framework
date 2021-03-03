@@ -1,7 +1,9 @@
 package github.ch.register.zk;
 
+import github.ch.extension.ExtensionLoader;
 import github.ch.factory.SingletonFactory;
 import github.ch.loadbalance.LoadBalance;
+import github.ch.loadbalance.loadbalancer.ConsistentHashLoadBalance;
 import github.ch.register.ServiceDiscovery;
 import github.ch.register.zk.util.CuratorUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     private final LoadBalance loadBalance;
 
     public ZkServiceDiscovery() {
-        loadBalance = SingletonFactory.getInstance(LoadBalance.class);
+        loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("consistentHashLoadBalance");
     }
 
     @Override
@@ -36,7 +38,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
             String address = loadBalance.selectServiceAddress(rpcServiceName, addressList);
             String[] tmpValue = address.split(":");
             inetSocketAddress = new InetSocketAddress(tmpValue[0], Integer.parseInt(tmpValue[1]));
-            log.info("look up service successfully");
+            log.info("look up service successfully : [{}]", address);
         } catch (Exception e) {
             log.error("look up service failed");
             e.printStackTrace();

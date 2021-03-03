@@ -35,16 +35,15 @@ public class RpcScannerRegister implements ImportBeanDefinitionRegistrar, Resour
         if (annotationAttributes != null) {
             rpcScannerBasePackage = annotationAttributes.getStringArray(BASE_PACKAGE);
         }
-        CustomScanner rpcScanner = new CustomScanner(registry, RpcService.class);
+        CustomScanner rpcServiceScanner = new CustomScanner(registry, RpcService.class);
         CustomScanner springScanner = new CustomScanner(registry, Component.class);
         if (resourceLoader != null) {
-            rpcScanner.setResourceLoader(resourceLoader);
+            rpcServiceScanner.setResourceLoader(resourceLoader);
             springScanner.setResourceLoader(resourceLoader);
         }
 
-
         log.info("The number of Spring scans : [{}]", springScanner.scan(SPRING_COMPONENT_PACKAGE));
 
-        log.info("The number of RPC scans : [{}]", rpcScanner.scan(rpcScannerBasePackage));
+        log.info("The number of RPC Server scans : [{}]", rpcServiceScanner.scan(rpcScannerBasePackage));
     }
 }

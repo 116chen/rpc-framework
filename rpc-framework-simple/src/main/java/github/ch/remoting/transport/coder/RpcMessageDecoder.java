@@ -1,9 +1,11 @@
 package github.ch.remoting.transport.coder;
 
 
+import github.ch.compress.Compress;
 import github.ch.compress.gzip.GzipCompress;
 import github.ch.enums.CompressTypeEnum;
 import github.ch.enums.SerializationTypeEnum;
+import github.ch.extension.ExtensionLoader;
 import github.ch.remoting.constants.RpcConstants;
 import github.ch.remoting.dto.RpcMessage;
 import github.ch.remoting.dto.RpcRequest;
@@ -90,9 +92,16 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         if (bodyLength > 0) {
             byte[] body = new byte[bodyLength];
             in.readBytes(body);
-            GzipCompress compress = new GzipCompress();
+
+            String compressName = CompressTypeEnum.getName(compressType);
+            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
+            //Compress compress = new GzipCompress();
             body = compress.decompress(body);
-            Serializer serializer = new ProtostuffSerializer();
+
+
+            String coderName = SerializationTypeEnum.getName(coderType);
+            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(coderName);
+            //Serializer serializer = new ProtostuffSerializer();
             if (messageType == RpcConstants.REQUEST_TYPE) {
                 RpcRequest request = serializer.deserialize(body, RpcRequest.class);
                 rpcMessage.setData(request);

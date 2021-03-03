@@ -1,5 +1,7 @@
 package github.ch.loadbalance;
 
+import github.ch.extension.SPI;
+
 import java.util.List;
 
 /**
@@ -7,8 +9,7 @@ import java.util.List;
  * @Author: 陈恒
  * @Time: 2021/2/27 下午12:50
  */
-public class LoadBalance {
-    public String selectServiceAddress(String rpcServiceName, List<String> addressList) {
-        return addressList.get(0);
-    }
+@SPI
+public interface LoadBalance {
+    String selectServiceAddress(String rpcServiceName, List<String> addressList);
 }

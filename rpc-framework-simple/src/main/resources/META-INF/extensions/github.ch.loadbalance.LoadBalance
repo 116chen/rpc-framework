@@ -1,0 +1,2 @@
+consistentHashLoadBalance=github.ch.loadbalance.loadbalancer.ConsistentHashLoadBalance
+randomLoadBalance=github.ch.loadbalance.loadbalancer.RandomLoadBalance

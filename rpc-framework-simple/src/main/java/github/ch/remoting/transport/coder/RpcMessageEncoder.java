@@ -5,6 +5,7 @@ import github.ch.compress.Compress;
 import github.ch.compress.gzip.GzipCompress;
 import github.ch.enums.CompressTypeEnum;
 import github.ch.enums.SerializationTypeEnum;
+import github.ch.extension.ExtensionLoader;
 import github.ch.remoting.constants.RpcConstants;
 import github.ch.remoting.dto.RpcMessage;
 import github.ch.serialize.Serializer;
@@ -56,9 +57,16 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             int fullLength = RpcConstants.HEAD_LENGTH;
             if (rpcMessage.getMessageType() != RpcConstants.HEART_REQUEST
                     && rpcMessage.getMessageType() != RpcConstants.HEART_RESPONSE) {
-                Serializer serializer = new ProtostuffSerializer();
+
+                String coderName = SerializationTypeEnum.getName(rpcMessage.getCoderType());
+                Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(coderName);
+                //Serializer serializer = new ProtostuffSerializer();
                 body = serializer.serialize(rpcMessage.getData());
-                Compress compress = new GzipCompress();
+
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompressType());
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
+
+                //Compress compress = new GzipCompress();
                 body = compress.compress(body);
                 fullLength += body.length;
             }

@@ -11,6 +11,8 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +83,7 @@ public class CuratorUtil {
             if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS))
                 throw new RuntimeException("Time out waiting to connect to zk");
         } catch (RuntimeException | InterruptedException e) {
-            e.printStackTrace();
+            log.error("get client failed");
         }
         return zkClient;
     }
@@ -97,7 +99,20 @@ public class CuratorUtil {
                     });
             pathChildrenCache.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("register watcher failed");
         }
+    }
+
+    public static void clearRegister(CuratorFramework zkClient, InetSocketAddress inetAddress) {
+        REGISTER_PATH_SET.stream().parallel().forEach(p -> {
+            if (p.endsWith(inetAddress.toString())) {
+                try {
+                    zkClient.delete().forPath(p);
+                } catch (Exception e) {
+                    log.error("clear services failed");
+                }
+            }
+        });
+        log.info("clear all services");
     }
 }

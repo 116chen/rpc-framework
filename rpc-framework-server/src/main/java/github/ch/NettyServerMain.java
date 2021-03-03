@@ -13,7 +13,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class NettyServerMain {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(NettyServerMain.class);
-        NettyRpcServer server = (NettyRpcServer) context.getBean("nettyRpcServer");
+        NettyRpcServer server = new NettyRpcServer();
         server.start();
     }
 }

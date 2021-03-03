@@ -1,7 +1,9 @@
 package github.ch.provider;
 
 import github.ch.entity.RpcServiceProperties;
+import github.ch.extension.ExtensionLoader;
 import github.ch.factory.SingletonFactory;
+import github.ch.register.ServiceDiscovery;
 import github.ch.register.ServiceRegister;
 import github.ch.register.zk.ZkServiceRegister;
 import github.ch.remoting.transport.server.NettyRpcServer;
@@ -25,7 +27,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     private final ServiceRegister SERVICE_REGISTER;
 
     public ServiceProviderImpl() {
-        SERVICE_REGISTER = SingletonFactory.getInstance(ZkServiceRegister.class);
+        SERVICE_REGISTER = ExtensionLoader.getExtensionLoader(ServiceRegister.class).getExtension("zk");
     }
 
     @Override

@@ -1,5 +1,8 @@
 package github.ch.serialize;
 
+import github.ch.extension.SPI;
+
+@SPI
 public interface Serializer {
     /**
      * 序列化

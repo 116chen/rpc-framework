@@ -3,6 +3,7 @@ package github.ch.spring;
 import github.ch.annotation.RpcReference;
 import github.ch.annotation.RpcService;
 import github.ch.entity.RpcServiceProperties;
+import github.ch.extension.ExtensionLoader;
 import github.ch.factory.SingletonFactory;
 import github.ch.provider.ServiceProvider;
 import github.ch.provider.ServiceProviderImpl;
@@ -29,7 +30,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
 
     public SpringBeanPostProcessor() {
         this.serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
-        this.rpcClient = SingletonFactory.getInstance(NettyRpcClient.class);
+        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("nettyClient");
     }
 
     @Override

@@ -14,8 +14,14 @@ import java.lang.reflect.AnnotatedType;
  */
 public class CustomScanner extends ClassPathBeanDefinitionScanner {
 
-    public CustomScanner(BeanDefinitionRegistry beanDefinitionRegistry, Class<? extends Annotation> annotationType) {
+    public CustomScanner(BeanDefinitionRegistry beanDefinitionRegistry, Class<? extends Annotation>... annotationTypes) {
         super(beanDefinitionRegistry);
-        super.addIncludeFilter(new AnnotationTypeFilter(annotationType));
+        for (Class<? extends Annotation> annotationType : annotationTypes) {
+            super.addIncludeFilter(new AnnotationTypeFilter(annotationType));
+        }
+    }
+
+    public CustomScanner(BeanDefinitionRegistry registry) {
+        super(registry);
     }
 }
