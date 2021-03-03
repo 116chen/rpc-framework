@@ -19,13 +19,14 @@ import java.util.concurrent.ConcurrentMap;
 public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
     private final static ConcurrentMap<String, ConsistentHashSelector> selectors = new ConcurrentHashMap<>();
+    private final static int DEFAULT_REPLICA_NUMBER = 160;
 
     @Override
     protected String doSelect(String rpcServiceName, List<String> addressList) {
         int hashCode = addressList.hashCode();
         ConsistentHashSelector selector = selectors.get(rpcServiceName);
         if (selector == null || selector.identityHashCode != hashCode) {
-            selectors.put(rpcServiceName, new ConsistentHashSelector(addressList, hashCode, 160));
+            selectors.put(rpcServiceName, new ConsistentHashSelector(addressList, hashCode, DEFAULT_REPLICA_NUMBER));
             selector = selectors.get(rpcServiceName);
         }
         return selector.doSelect(rpcServiceName);
